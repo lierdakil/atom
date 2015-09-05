@@ -161,7 +161,6 @@ class AtomApplication
       safeMode: @focusedWindow()?.safeMode
 
     @on 'application:run-all-specs', -> @runSpecs(exitWhenDone: false, resourcePath: global.devResourcePath, safeMode: @focusedWindow()?.safeMode)
-    @on 'application:run-benchmarks', -> @runBenchmarks()
     @on 'application:quit', -> app.quit()
     @on 'application:new-window', -> @openPath(_.extend(windowDimensions: @focusedWindow()?.getDimensions(), getLoadSettings()))
     @on 'application:new-file', -> (@focusedWindow() ? this).openPath()
@@ -508,18 +507,6 @@ class AtomApplication
     devMode = true
     safeMode ?= false
     new AtomWindow({bootstrapScript, resourcePath, exitWhenDone, isSpec, devMode, specDirectory, logFile, safeMode})
-
-  runBenchmarks: ({exitWhenDone, specDirectory}={}) ->
-    try
-      bootstrapScript = require.resolve(path.resolve(global.devResourcePath, 'benchmark', 'benchmark-bootstrap'))
-    catch error
-      bootstrapScript = require.resolve(path.resolve(__dirname, '..', '..', 'benchmark', 'benchmark-bootstrap'))
-
-    specDirectory ?= path.dirname(bootstrapScript)
-
-    isSpec = true
-    devMode = true
-    new AtomWindow({bootstrapScript, @resourcePath, exitWhenDone, isSpec, specDirectory, devMode})
 
   locationForPathToOpen: (pathToOpen) ->
     return {pathToOpen} unless pathToOpen
